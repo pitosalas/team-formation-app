@@ -1,0 +1,230 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+
+<body class='view4'>
+  <div class='container profile-container' id="classroom" data_channel_subscribe="room" data-room-active="<%= @course.has_enough_projects%>" data-room-id="<%= @course.id %>" data-room-voting="<%= @course.voting%>">
+  
+    <% if !flash[:alert].nil?%>
+      <div class="alert alert-danger">
+        <strong> Group creation had the following errors: </strong>
+        <% flash[:alert].each do |error| %>
+          <li> <%= error %> </li>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if !flash[:success].nil?%>
+      <div class="alert alert-success">
+        <%= flash[:success] %>
+      </div>
+    <%end %>
+
+
+    <% if @course.errors.any? %>
+      <div class="alert alert-danger">
+        <p><%= pluralize(@course.errors.count, "error") %> prohibited this course from being updating:</p>
+        <ul>
+          <% @course.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %> 
+      <div class='row profile-row'>
+        <div class='col course-profile-column'>
+          <p class="course-title">
+            <strong><%= @course.name %></strong>
+          </p>
+
+          <p class="secondary-title">
+            <strong>Pin:</strong>
+            <%= @course.pin %>
+          </p>
+
+          <p class="secondary-title">
+            <strong>Professor:</strong>
+            <% professor = @course.professor %>
+            <%= professor.firstname + ' '+ professor.lastname  %>
+          </p>
+        </div>
+
+        <% if current_user_type == "professor" && get_professor_id(@course) == current_user.id%>
+          <% create_groups_path = @course.id.to_s+ "/create_groups" %>
+          <div class='col course-button-column'>
+            <%= button_to 'Create Random Groups', {:controller => "courses", :action => "create_groups", :algo => "random"}, :class => "btn btn-outline-primary addButton", :method=>:post%>
+            <br>
+            
+            <div id='header' class="header">
+            <div>
+              <p class="warning"> <strong> Group Creation using preferences is disabled due to: </strong> </p>
+            </div>
+            
+            
+              
+              <div id="active3-warning-show">
+                <img id="active3-img" src="/assets/yellow-alert.png" height="22" width="22">
+                <p class="warning" id="warning-message"> Less than 3 active projects </p>
+              </div>
+              
+              <div id="active3-warning-hide"></div>
+              
+
+              <div class="warnings">
+                <img src="/assets/yellow-alert.png" height="22" width="22">
+                <p class="warning">  Voting still in progress </p>
+              </div>
+              <p></p>
+            </div>
+            
+
+            <div class = disabled>
+              <%= button_to 'Create Groups Based on Project Preference', {:controller => "courses", :action => "create_groups", :algo => "project_only"},  :disabled => true, :class => "btn btn-outline-primary addButton", :method=>:post%>
+              <br>
+              <button disabled class="btn btn-outline-primary addButton" data-toggle="modal" data-target="#professor-preference-form">
+                Create Groups Based on All Preference
+              </button>
+            </div>
+
+            <div class = enabled >
+              <%= button_to 'Create Groups Based on Project Preference', {:controller => "courses", :action => "create_groups", :algo => "project_only"},  :disabled => false, :class => "btn btn-outline-primary addButton", :method=>:post%>
+              <br>        
+              <button class="btn btn-outline-primary addButton" data-toggle="modal" data-target="#professor-preference-form">
+                Create Groups Based on All Preference
+              </button>
+            </div>
+              
+          </div>
+
+            <div class="modal fade" id="professor-preference-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Create Your Preference for: <span><%= @course.name %></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                
+                  <div class="modal-body">
+                      <%= form_with(url: create_groups_course_path, local: true) do |f| %>
+                        <%= hidden_field_tag :algo, 'holistic'%>
+                        <div class="alert alert-danger d-none">Please review the problems below:</div>
+                       
+                        <label class="modal-label"><%= f.label 'How important are students\' preferences on project choices?'%> </label>
+                        <%= f.collection_radio_buttons :projectWeight, [[1,1],[2,2],[3,3],[4,4],[5,5]], :first, :last, { item_wrapper_tag: false },{:style=>"
+                        margin-left: 24px; margin-right:5px;"}%>
+                        <br> <p> unimportant &emsp; &emsp; &emsp; &emsp; &emsp; very important </p>
+                        <hr size="10">
+                        <label class="modal-label"><%= f.label 'Do you want each team to have various level of coding proficiencies?' %></label>
+                        <%= f.collection_radio_buttons :codingWeight, [[1,1],[2,2],[3,3],[4,4],[5,5]], :first, :last, { item_wrapper_tag: false },{:style=>"
+                        margin-left: 24px; margin-right:5px"}%>
+                        <p> not diverse &emsp; &emsp; &emsp; &emsp; &emsp; as diverse as possible </p><hr size="10">
+                        <label class="modal-label"><%= f.label 'How important are students\' preferences on their partner choice?'%></label>
+                        <%= f.collection_radio_buttons :partnerWeight, [[1,1],[2,2],[3,3],[4,4],[5,5]], :first, :last, { item_wrapper_tag: false },{:style=>"
+                        margin-left: 24px; margin-right:5px"}%>
+                        <p> unimportant &emsp; &emsp; &emsp; &emsp; &emsp; very important </p><hr size="10">
+                        <label class="modal-label"><%= f.label 'Should team members have more than 2 hours/week avaiable meeting-time?'%></label>
+                        <%= f.collection_radio_buttons :scheduleWeight, [[1,1],[2,2],[3,3],[4,4],[5,5]], :first, :last, { item_wrapper_tag: false },{:style=>"
+                        margin-left: 24px; margin-right:5px"}%> <p> unimportant &emsp; &emsp; &emsp; &emsp; &emsp; very important </p>
+                        <div class="modal-footer border-top-0 d-flex justify-content-center">
+                          <div class='modal-button'>
+                            <%= f.submit("Submit and Create Group", class: "btn btn-primary createButton") %>
+                            <button class="btn btn-outline-primary addButton" type="reset">Reset</button>
+                          </div>
+                        </div>
+                      <%end%>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        <% elsif current_user_type == "student" %>
+          <div class='col course-button-column-stu'>
+            
+            <div id="create-preference-show">
+              <%if !Preference.find_by(student_id:current_user.id, course_id:@course.id).nil?%>
+                <img src="/assets/green_check.jpg" height="22" width="22">
+                <p class ="warning"> Your preference has been recorded</p>
+                <p></p>
+              <%end%>
+
+              <%= link_to new_preference_path(course: @course) do %>
+                <button class="btn btn-outline-primary addButton btn-lg"></i> Create Preference</button>
+              <% end %>
+            </div>
+           
+            <div id="create-preference-hide">
+              <img src="/assets/yellow-alert.png" height="32" width="32"> 
+              <p class ="warning"> Can not create preferences until voting has ended </p>
+              <br> <br>
+            </div>
+            
+          </div>
+        <% end %>
+      </div>
+
+      <hr/>
+      
+      <div class='row' id='course-info-box'>
+        <div class='col' id='course-info-col'>
+          <ul class="nav nav-tabs" id="course-nav">
+            <li class="nav-item">
+              <a href="#projects" class="nav-link tab-projects active" data-toggle="tab" >Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="#students" class="nav-link tab-students" data-toggle="tab" >Students</a>
+            </li>
+            
+            <li class="nav-item">
+              <a href="#groups" class="nav-link tab-groups" data-toggle="tab" >Groups</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+
+            <div class="tab-pane fade show active" id="projects">
+              <% if current_user_type == "professor" && get_professor_id(@course) == current_user.id%>
+                <br>
+                <div id = "toggle-container">
+                  <% if @course.voting==true %>
+                  <p class="status" id="status">Current Process: Voting</p>
+                  <button class="btn btn-primary btn-lg" id="toggle-button" data-turbolinks="false"> End Voting and Allow Preferences</button>
+                  <%else%>
+                  <p class="status" id="status">Current Process: Preference Filling</p>
+                  <button class="btn btn-primary btn-lg" id="toggle-button" data-turbolinks="false"> Resume Voting</button>
+                  <%end%>
+
+                </div>
+                <%= tag.div id: :boards, data:{groups: @course.groups.to_json, course: @course.to_json}%>
+              <% else %>    
+                <%= tag.div id: :stuboards, data:{groups: @course.groups.to_json,course:@course.to_json, student: Student.find(current_user.id).to_json, taking: Taking.find_by(student_id:current_user.id, course_id:@course.id).to_json}%>              
+              <%end%>
+            </div>
+
+            <div class="tab-pane fade " id="students">
+              <div class="container projects-box">
+                <%= render 'students' %>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="groups">
+              <div class="container projects-box">   
+                <%= render 'groups' %>
+              </div>
+            </div>
+         
+          </div> 
+        </div>
+              
+      </div>
+
+  </div>
+</body>
+
+<script>
+
+
+
+</script>

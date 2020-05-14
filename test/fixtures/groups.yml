@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+Kitties:
+  course: FakeCourse
+  project_name: Kitties
+  description: Cats on ice
+
+Doggies:
+  course: FakeCourse
+  project_name: Doggies
+  description: Doggos gogo
+
+Panda:
+  course: FakeCourse
+  project_name: Panda
+  description: Very Stressed

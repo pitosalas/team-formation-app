@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+SearchCourse:
+  name: SearchCourse
+  pin: 0000
+  professor: admin
+
+FakeCourse:
+  name: FakeCourse
+  pin: 1112
+  professor: admin
+
+FakeCourse2:
+  name: FakeCourse2
+  pin: 1113
+  professor: admin

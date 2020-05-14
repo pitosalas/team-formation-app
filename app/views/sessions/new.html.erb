@@ -1,0 +1,34 @@
+<div class='view2'>
+  <div class='container' id='login-container'>
+    <div class='form-wrap'>
+      <% provide(:title, "Log in") %>
+        <h1 class="login-title"> <%=@type.capitalize=%> Log in</h1>
+        <div class="row" id="login-row">
+          <div class="col-md-6 col-md-offset-3">
+
+            <%= form_with(url: login_path, method: "post") do %>
+              
+              <%= label_tag(:email,"") %>
+              <div class="col-md-6">
+                <i class="fas fa-envelope fa-lg form-icon" ></i>
+                <%= email_field_tag(:email, "", class: 'form-control', id: "login-input", placeholder: "Type your email") %>
+              </div>
+
+              <%= label_tag(:password,"") %>
+              <div class="col-md-6">
+                <i class="fas fa-key fa-lg form-icon" ></i>
+                <%= password_field_tag(:password, "", class: 'form-control',  id: "login-input", placeholder: "Type your password") %>
+              </div>
+              
+              <%= hidden_field(:type, :field, :value => @type)%>
+              <br>
+              <%= submit_tag("Log in", class: "btn btn-outline-primary", id:"btn-custom")%>
+              <br><br>
+            <% end %>
+            <p id="notice"><%= notice %></p>
+            <p class="login-back-path">New user? <%= link_to "Sign up now!", root_path, class:"signup-link" %></p>
+          </div>
+        </div>
+    </div>
+  
+</div>

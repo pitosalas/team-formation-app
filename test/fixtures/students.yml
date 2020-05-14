@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin:
+  id: 1
+  firstname: admin
+  lastname: admin
+  email: admin@admin.com
+  password_digest: <%= Student.digest('password') %>
+  activated: true
+
+jeremy:
+  firstname: Jeremy
+  lastname: Bearimy
+  email: bearimy@brandeis.edu
+  activated: true
+
+derek:
+  firstname: Derek
+  lastname: Derek
+  email: derek@multiverse.com
+  activated: true
+
+eleanor:
+  firstname: Eleanor
+  lastname: Shellstrop
+  email: shellstrop@margarita.com
+  activated: true
+
+chidi:
+  firstname: Chidi
+  lastname: Anagognye
+  email: ethics@philosophy.com
+  activated: true
+
+tahani:
+  firstname: Tahani
+  lastname: Al-Jamil
+  email: fuck@sister.com
+  activated: true
+
+jason:
+  firstname: Jason
+  lastname: Mendoza
+  email: bortles@molotov.com
+  activated: true

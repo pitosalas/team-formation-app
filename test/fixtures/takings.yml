@@ -1,0 +1,26 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: jeremy
+  course: FakeCourse
+
+two:
+  student: derek
+  course: FakeCourse
+
+three:
+  student: eleanor
+  course: FakeCourse
+
+four:
+  student: chidi
+  course: FakeCourse
+
+five:
+  student: tahani
+  course: FakeCourse
+
+six:
+  student: jason
+  course: FakeCourse
+

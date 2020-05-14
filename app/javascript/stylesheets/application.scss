@@ -1,0 +1,72 @@
+@import '@fullcalendar/core/main.css';
+@import '@fullcalendar/daygrid/main.css';
+@import '@fullcalendar/timegrid/main.css';
+@import './bootstrap_custom.scss';
+
+
+
+html,
+body,
+.view1, .view2, .view3, .view4{
+  height: 100%;
+}
+.view4{
+  height: 200%;
+}
+
+@media (max-width: 740px) {
+  html,
+  body,
+  .view1, .view2, .view3, .view4{
+    height: 100vh;
+  }
+}
+
+
+/* head */
+.navbar-custom{
+  background-color: rgb(0,52,120); 
+}
+#logo {
+    float: left;
+    font-size: 1.7em;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    font-weight: bold;
+}
+  
+#logo:hover {
+    color: lightgray;
+    text-decoration: none;
+  }
+
+.nav-link{
+  font-weight: bold;
+}
+
+.nav-link:hover{
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Homepage */
+@import './pages.scss';
+/* Professor signup page*/
+@import './signup.scss';
+
+
+/* login page */
+@import './sessions.scss';
+
+/* Professor profile page */
+@import './professors.scss';
+
+/* Student profile page */
+@import './students.scss';
+
+
+/*course file page */
+@import './courses.scss';
+
+@import './preferences.scss';
